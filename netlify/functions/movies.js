@@ -21,13 +21,15 @@ exports.handler = async function(event) {
   // 🔥 hw6: your recipe and code starts here!
   let year = event.queryStringParameters.year
   let genre = event.queryStringParameters.genre
-  
-  if (year == undefined || genre == undefined) {
+  // write out inputs by user
+  console.log(`the year is ${year} and genre is ${genre} `)
+  if (year == undefined || genre==undefined) {
     return {
       statusCode: 200, // https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-      body: `Nope!` // a string of data
+      body: `Missing either year or genre in url! pls fix thx` // a string of data telling user to fix any input problems
     }
   }
+  // creating structure for count and array for movies
   else {
     let returnValue = {
       numResults: 0,
@@ -35,13 +37,25 @@ exports.handler = async function(event) {
     }
 
     for (let i=0; i < moviesFromCsv.length; i++) {
-
+      let movie=moviesFromCsv[i]
+      //Create new  object containing relevant fields we want in our array
+      let movObject = {
+        title: movie.primaryTitle,
+        yearRelease: movie.startYear,
+        genres: movie.genres}
+      //have if statement that pulls in results from the two inputted variables and excludes results where genres and runtime are null
+      if (movie.startYear== year&&movie.genres!=`\\N`&&movie.runtimeMinutes!=`\\N`&&movie.genres.includes(genre)) {
+      //push the movie object and add one to the counter
+          returnValue.movies.push(movObject)
+          returnValue.numResults=returnValue.numResults+1
+      }
     }
+
 
     // a lambda function returns a status code and a string of data
     return {
       statusCode: 200, // https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-      body: `Hello from the back-end!` // a string of data
+      body: JSON.stringify(returnValue) // a string of data
     }
   }
 }
