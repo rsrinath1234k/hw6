@@ -35,7 +35,7 @@ exports.handler = async function(event) {
       numResults: 0,
       movies: []
     }
-
+    // add movies via for loop that meet specified conditions
     for (let i=0; i < moviesFromCsv.length; i++) {
       let movie=moviesFromCsv[i]
       //Create new  object containing relevant fields we want in our array
